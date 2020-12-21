@@ -1,0 +1,26 @@
+# docker-compose.yml
+version: "3.3"
+services:
+  chatapp-mysql:
+    image: mysql:5.7
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=ChatAppDb
+      - MYSQL_USER=chatapp-user
+      - MYSQL_PASSWORD=secret
+    ports:
+      - 3307:3306
+
+  chatapp-main:
+    image: registry.git-repo/perryschatapp:latest
+    restart: on-failure
+    depends_on:
+      - chatapp-mysql
+    ports:
+      - 8080:8080
+    environment:
+      - DATABASE_HOST=chatapp-mysql
+      - DATABASE_USER=chatapp-user
+      - DATABASE_PASSWORD=password
+      - DATABASE_NAME=ChatAppDb
+      - DATABASE_PORT=3306
